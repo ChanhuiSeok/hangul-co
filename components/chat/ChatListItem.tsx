@@ -1,11 +1,12 @@
-import { ChatRoomData } from "./types";
+import { ChatRoomData, MessageData } from "./types";
 
 interface ChatListItemProps {
   chatRoom: ChatRoomData;
+  chatMessages: MessageData[];
   onClick?: () => void;
 }
 
-export default function ChatListItem({ chatRoom, onClick }: ChatListItemProps) {
+export default function ChatListItem({ chatRoom, chatMessages, onClick }: ChatListItemProps) {
   return (
     <div
       id={`채팅목록${chatRoom.id}`}
@@ -15,7 +16,9 @@ export default function ChatListItem({ chatRoom, onClick }: ChatListItemProps) {
       }`}
     >
       {/* ID 표시 */}
-      <div className="absolute top-1 right-1 bg-blue-500 text-white font-bold text-sm px-1.5 py-0.5 rounded">{`ID: 채팅목록${chatRoom.id}`}</div>
+      <div className="absolute top-1 right-1 bg-blue-700 text-white font-bold text-sm px-1.5 py-0.5 rounded">
+        ID: <span className="text-yellow-200">채팅목록{chatRoom.id}</span>
+      </div>
       <div
         className={`w-12 h-12 rounded-full ${chatRoom.avatarColor} flex items-center justify-center text-white font-semibold mr-3`}
       >
@@ -27,7 +30,7 @@ export default function ChatListItem({ chatRoom, onClick }: ChatListItemProps) {
           <span className="text-xs text-gray-500">{chatRoom.lastMessageTime}</span>
         </div>
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-600 truncate">{chatRoom.lastMessage}</p>
+          <p className="text-sm text-gray-600 truncate">{chatMessages[chatMessages.length - 1]?.content}</p>
           {chatRoom.unreadCount > 0 && (
             <span className="ml-2 bg-yellow-400 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
               {chatRoom.unreadCount}

@@ -5,15 +5,35 @@ interface ChatRoomProps {
   roomId: string;
   roomName: string;
   messages: MessageData[];
-  dateLabel?: string;
 }
 
-export default function ChatRoom({ roomId, roomName, messages, dateLabel = "2024년 3월 15일 금요일" }: ChatRoomProps) {
+// 날짜 포맷 함수
+function formatDateLabel(date: Date): string {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const weekdays = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
+  const weekday = weekdays[date.getDay()];
+
+  return `${year}년 ${month}월 ${day}일 ${weekday}`;
+}
+
+// 두 날짜가 같은 날인지 확인
+function isSameDay(date1: Date | undefined, date2: Date | undefined): boolean {
+  if (!date1 || !date2) return false;
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getDate() === date2.getDate()
+  );
+}
+
+export default function ChatRoom({ roomId, roomName, messages }: ChatRoomProps) {
   return (
     <div id={`채팅방${roomId}`} className="relative flex-1 flex flex-col bg-[#B2C7D9]">
       {/* ID 표시 */}
-      <div className="absolute top-1 right-1 bg-blue-500 text-white font-bold text-sm px-1.5 py-0.5 rounded z-10">
-        {`ID: 채팅방${roomId}`}
+      <div className="absolute top-1 right-1 bg-blue-700 text-white font-bold text-sm px-1.5 py-0.5 rounded z-10">
+        ID: <span className="text-yellow-200">채팅방{roomId}</span>
       </div>
       {/* 채팅방 헤더 */}
       <div className="p-4 flex items-center justify-between">
@@ -31,17 +51,25 @@ export default function ChatRoom({ roomId, roomName, messages, dateLabel = "2024
 
       {/* 메시지 영역 */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* 날짜 구분선 */}
-        {dateLabel && (
-          <div className="flex items-center justify-center">
-            <div className="bg-black/10 rounded-full px-4 py-1 text-xs text-gray-900">{dateLabel}</div>
-          </div>
-        )}
+        {/* 메시지 목록 - 날짜가 바뀔 때마다 dateLabel 표시 */}
+        {messages.map((message, index) => {
+          const prevMessage = index > 0 ? messages[index - 1] : null;
+          const showDateLabel = index === 0 || !isSameDay(prevMessage?.date, message.date);
 
-        {/* 메시지 목록 */}
-        {messages.map((message) => (
-          <Message key={message.id} message={message} />
-        ))}
+          return (
+            <div key={message.id}>
+              {/* 날짜가 바뀌었거나 첫 메시지인 경우 날짜 구분선 표시 */}
+              {showDateLabel && message.date && (
+                <div className="flex items-center justify-center mb-4">
+                  <div className="bg-black/10 rounded-full px-4 py-1 text-xs text-gray-900">
+                    {formatDateLabel(message.date)}
+                  </div>
+                </div>
+              )}
+              <Message message={message} />
+            </div>
+          );
+        })}
       </div>
 
       {/* 메시지 입력창 */}

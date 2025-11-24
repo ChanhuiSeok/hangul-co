@@ -1,12 +1,13 @@
-import { ChatRoomData } from "./types";
+import { ChatRoomData, MessageData } from "./types";
 import ChatListItem from "./ChatListItem";
 
 interface ChatListProps {
   chatRooms: ChatRoomData[];
+  messages: Record<string, MessageData[]>;
   onChatRoomClick?: (chatRoomId: string) => void;
 }
 
-export default function ChatList({ chatRooms, onChatRoomClick }: ChatListProps) {
+export default function ChatList({ chatRooms, messages, onChatRoomClick }: ChatListProps) {
   return (
     <div className="w-80 border-r border-gray-200 flex flex-col">
       {/* 헤더 */}
@@ -20,6 +21,7 @@ export default function ChatList({ chatRooms, onChatRoomClick }: ChatListProps) 
           <ChatListItem
             key={chatRoom.id}
             chatRoom={chatRoom}
+            chatMessages={messages[chatRoom.id]}
             onClick={() => onChatRoomClick?.(chatRoom.id)}
           />
         ))}

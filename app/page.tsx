@@ -3,29 +3,32 @@
 import { useState } from "react";
 import PreviewArea from "@/components/PreviewArea";
 import EditorArea from "@/components/EditorArea";
+import { EventBinding } from "@/lib/parser";
 
 export default function Home() {
   const [code, setCode] = useState("");
   const [commands, setCommands] = useState<any[]>([]);
+  const [eventBindings, setEventBindings] = useState<EventBinding[]>([]);
 
-  const handleRunCode = (executedCommands: any[]) => {
-    console.log('🚀 명령어 실행:', executedCommands);
-    setCommands(executedCommands);
+  const handleRunCode = (result: { commands: any[]; eventBindings: EventBinding[] }) => {
+    console.log("🚀 명령어 실행:", result.commands);
+    console.log("🔗 이벤트 바인딩:", result.eventBindings);
+    setCommands(result.commands);
+    setEventBindings(result.eventBindings);
   };
 
   return (
     <main className="flex flex-col h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 shadow-lg">
-        <h1 className="text-2xl font-bold">상서중학교 코딩체험 🧑‍💻</h1>
-        <p className="text-sm text-blue-100 mt-1">나만의 웹사이트 만들기</p>
+      <header className="bg-indigo-600 text-white py-2 px-4 shadow-lg">
+        <h1 className="text-xl font-bold">상서중학교 - 나만의 채팅 만들기 🧑‍💻</h1>
       </header>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Preview Area */}
         <div className="p-4">
-          <PreviewArea code={code} commands={commands} />
+          <PreviewArea code={code} commands={commands} eventBindings={eventBindings} />
         </div>
 
         {/* Editor Area */}

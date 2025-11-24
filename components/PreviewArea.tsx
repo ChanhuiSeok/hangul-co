@@ -6,17 +6,28 @@ import ChatRoom from "./chat/ChatRoom";
 import { sampleChatRooms, chatRoomMessages as initialChatRoomMessages } from "@/constants/chatData";
 import { createMessage } from "@/lib/chatUtils";
 import { MessageData } from "./chat/types";
+import { EventBinding } from "@/lib/parser";
 
 interface PreviewAreaProps {
   code: string;
   commands?: any[];
+  eventBindings?: EventBinding[];
 }
 
-export default function PreviewArea({ code, commands = [] }: PreviewAreaProps) {
+export default function PreviewArea({ code, commands = [], eventBindings = [] }: PreviewAreaProps) {
   const previewRef = useRef<HTMLDivElement>(null);
   const [selectedChatRoomId, setSelectedChatRoomId] = useState("1");
   const [chatRoomMessages, setChatRoomMessages] = useState<Record<string, MessageData[]>>(initialChatRoomMessages);
   const [isChatRoomOpen, setIsChatRoomOpen] = useState(false);
+  const [activeEventBindings, setActiveEventBindings] = useState<EventBinding[]>([]);
+
+  // 이벤트 바인딩 업데이트
+  useEffect(() => {
+    if (eventBindings.length > 0) {
+      console.log("🔗 이벤트 바인딩 활성화:", eventBindings);
+      setActiveEventBindings(eventBindings);
+    }
+  }, [eventBindings]);
 
   // 명령어 실행
   useEffect(() => {
@@ -67,8 +78,31 @@ export default function PreviewArea({ code, commands = [] }: PreviewAreaProps) {
 
   // 채팅방 클릭 핸들러
   const handleChatRoomClick = (id: string) => {
-    // setSelectedChatRoomId(id);
-    // setIsChatRoomOpen(true);
+    console.log(`🖱️ 채팅목록${id} 클릭됨`);
+
+    // 이벤트 바인딩 확인
+    const binding = activeEventBindings.find(
+      (b) =>
+        b.source.object === "채팅목록" && b.source.id === id && (b.source.event === "클릭" || b.source.event === "선택")
+    );
+
+    if (binding) {
+      console.log(`🔗 이벤트 바인딩 발견:`, binding);
+
+      // 바인딩된 동작 실행
+      if (binding.target.object === "채팅방") {
+        const targetRoomId = binding.target.id || id;
+        const validActions = ["보여주기"];
+
+        if (validActions.includes(binding.target.action)) {
+          console.log(`📱 채팅방 ${targetRoomId}번으로 전환 (이벤트 바인딩)`);
+          setSelectedChatRoomId(targetRoomId);
+          setIsChatRoomOpen(true);
+        }
+      }
+    } else {
+      console.log("❌ 해당 클릭에 대한 이벤트 바인딩이 없습니다.");
+    }
   };
 
   return (
@@ -88,7 +122,7 @@ export default function PreviewArea({ code, commands = [] }: PreviewAreaProps) {
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                 />
               </svg>
-              <span className="text-sm text-gray-700 truncate">미리보기</span>
+              <span className="text-sm text-gray-700 truncate">채팅</span>
             </div>
           </div>
 
@@ -128,7 +162,7 @@ export default function PreviewArea({ code, commands = [] }: PreviewAreaProps) {
                   d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                 />
               </svg>
-              <span className="text-sm text-gray-600 truncate">localhost:3000/preview</span>
+              <span className="text-sm text-gray-600 truncate">{"sangseo.coding.experience"}</span>
             </div>
 
             {/* 메뉴 버튼 */}
@@ -153,14 +187,17 @@ export default function PreviewArea({ code, commands = [] }: PreviewAreaProps) {
         >
           {/* 카카오톡 스타일 채팅 UI */}
           <div className="flex h-full">
-            <ChatList chatRooms={updatedChatRooms} onChatRoomClick={handleChatRoomClick} />
+            <ChatList chatRooms={updatedChatRooms} messages={chatRoomMessages} onChatRoomClick={handleChatRoomClick} />
             {isChatRoomOpen && selectedChatRoom && (
-              <ChatRoom
-                roomId={selectedChatRoomId}
-                roomName={selectedChatRoom.name}
-                messages={selectedMessages}
-                dateLabel="2025년 11월 28일 금요일"
-              />
+              <ChatRoom roomId={selectedChatRoomId} roomName={selectedChatRoom.name} messages={selectedMessages} />
+            )}
+            {!isChatRoomOpen && (
+              <div className="flex-1 flex items-center justify-center">
+                <div className="bg-blue-700 text-white font-bold text-sm px-1.5 py-0.5 rounded z-10">
+                  ID: <span className="text-yellow-200">채팅방1</span> 또는{" "}
+                  <span className="text-yellow-200">채팅방2</span> 또는 <span className="text-yellow-200">채팅방3</span>
+                </div>
+              </div>
             )}
           </div>
         </div>

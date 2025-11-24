@@ -30,12 +30,14 @@ export function createMessage(
     senderAvatar?: string;
     senderAvatarColor?: string;
     timestamp?: string;
+    date?: Date;
   }
 ): MessageData {
   return {
     id: generateMessageId(),
     content,
     timestamp: options?.timestamp ?? formatTimestamp(),
+    date: options?.date ?? new Date(),
     isMine,
     senderName: options?.senderName,
     senderAvatar: options?.senderAvatar,
@@ -57,10 +59,7 @@ function generateMessageId(): string {
  * @param newMessage 추가할 새로운 메시지
  * @returns 새 메시지가 추가된 배열 (불변성 유지)
  */
-export function addMessage(
-  messages: MessageData[],
-  newMessage: MessageData
-): MessageData[] {
+export function addMessage(messages: MessageData[], newMessage: MessageData): MessageData[] {
   return [...messages, newMessage];
 }
 
@@ -70,10 +69,7 @@ export function addMessage(
  * @param messageId 삭제할 메시지 ID
  * @returns 메시지가 삭제된 새로운 배열
  */
-export function removeMessage(
-  messages: MessageData[],
-  messageId: string
-): MessageData[] {
+export function removeMessage(messages: MessageData[], messageId: string): MessageData[] {
   return messages.filter((msg) => msg.id !== messageId);
 }
 
@@ -89,7 +85,5 @@ export function updateMessage(
   messageId: string,
   updates: Partial<Omit<MessageData, "id">>
 ): MessageData[] {
-  return messages.map((msg) =>
-    msg.id === messageId ? { ...msg, ...updates } : msg
-  );
+  return messages.map((msg) => (msg.id === messageId ? { ...msg, ...updates } : msg));
 }

@@ -13,6 +13,7 @@ export interface MessageData {
   id: string;
   content: string;
   timestamp: string;
+  date?: Date; // 메시지 날짜
   isMine: boolean;
   senderName?: string;
   senderAvatar?: string;

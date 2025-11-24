@@ -7,25 +7,91 @@ export interface Command {
   argument?: string; // 예: "안녕하세요" (메시지 내용)
 }
 
+export interface EventBinding {
+  source: {
+    object: string; // 예: "채팅목록"
+    id?: string; // 예: "1"
+    event: string; // 예: "클릭"
+  };
+  target: {
+    object: string; // 예: "채팅방"
+    id?: string; // 예: "1"
+    action: string; // 예: "열기"
+    argument?: string;
+  };
+}
+
 /**
  * 객체.동작 형식의 한글 코드를 파싱
- * 예: "채팅방1.열기"
+ * 예: "채팅방1.열기" 또는 "채팅목록1.클릭=채팅방1.열기"
  */
-export function parseObjectDotNotation(code: string): Command[] {
+export function parseObjectDotNotation(code: string): { commands: Command[]; eventBindings: EventBinding[] } {
   const commands: Command[] = [];
+  const eventBindings: EventBinding[] = [];
   const lines = code.split("\n").filter((line) => line.trim());
 
   lines.forEach((line) => {
     const trimmedLine = line.trim();
     if (!trimmedLine) return;
 
-    const parsed = parseObjectExpression(trimmedLine);
-    if (parsed) {
-      commands.push(parsed);
+    // 이벤트 바인딩 형식인지 확인 (=이 포함된 경우)
+    if (trimmedLine.includes("=")) {
+      const binding = parseEventBinding(trimmedLine);
+      if (binding) {
+        eventBindings.push(binding);
+      }
+    } else {
+      // 일반 명령어
+      const parsed = parseObjectExpression(trimmedLine);
+      if (parsed) {
+        commands.push(parsed);
+      }
     }
   });
 
-  return commands;
+  return { commands, eventBindings };
+}
+
+/**
+ * 이벤트 바인딩 표현식을 파싱
+ * 예: "채팅목록1.클릭=채팅방1.열기"
+ */
+function parseEventBinding(expr: string): EventBinding | null {
+  const parts = expr.split("=").map((p) => p.trim());
+  if (parts.length !== 2) return null;
+
+  const [sourcePart, targetPart] = parts;
+
+  // 소스 파싱 (예: "채팅목록1.클릭")
+  const sourceDotParts = sourcePart.split(".");
+  if (sourceDotParts.length < 2) return null;
+
+  const sourceObjPart = sourceDotParts[0].trim();
+  const sourceEventPart = sourceDotParts[1].trim();
+
+  const sourceObjMatch = sourceObjPart.match(/([가-힣]+)(\d+)?/);
+  if (!sourceObjMatch) return null;
+
+  const sourceObject = sourceObjMatch[1];
+  const sourceId = sourceObjMatch[2];
+
+  // 타겟 파싱 (예: "채팅방1.열기")
+  const targetCmd = parseObjectExpression(targetPart);
+  if (!targetCmd) return null;
+
+  return {
+    source: {
+      object: sourceObject,
+      id: sourceId,
+      event: sourceEventPart,
+    },
+    target: {
+      object: targetCmd.object,
+      id: targetCmd.id,
+      action: targetCmd.action,
+      argument: targetCmd.argument,
+    },
+  };
 }
 
 /**
