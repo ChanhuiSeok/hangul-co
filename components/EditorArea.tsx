@@ -316,6 +316,7 @@ export default function EditorArea({ code, onCodeChange, onRunCode, completedCas
             {objectBlocks.map((block) => (
               <button
                 key={block.label}
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => insertBlock(block.value)}
                 className="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-500 rounded font-mono transition"
                 style={{ backgroundColor: block.bgColor, color: block.textColor }}
@@ -330,6 +331,7 @@ export default function EditorArea({ code, onCodeChange, onRunCode, completedCas
             {commandBlocks.map((block) => (
               <button
                 key={block.label}
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => insertBlock(block.value)}
                 className="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-500 rounded font-mono transition"
                 style={{ backgroundColor: block.bgColor, color: block.textColor }}
