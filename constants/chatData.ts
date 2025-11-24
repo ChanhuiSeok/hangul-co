@@ -21,6 +21,12 @@ export const COLOR_MAP = {
   pink: "bg-pink-400",
 } as const;
 
+export const FRIEND = {
+  FIRST: "기헌",
+  SECOND: "현우",
+  THIRD: "우리 가족",
+} as const;
+
 // 지민이와의 대화
 export const messagesJimin: MessageData[] = [
   {
@@ -29,8 +35,8 @@ export const messagesJimin: MessageData[] = [
     timestamp: formatTimestamp(new Date("2025-11-24T07:28:00")),
     date: new Date("2025-11-24T07:28:00"),
     isMine: false,
-    senderName: "지민",
-    senderAvatar: "지",
+    senderName: FRIEND.FIRST,
+    senderAvatar: FRIEND.FIRST.charAt(0),
     senderAvatarColor: "bg-yellow-400",
   },
   {
@@ -46,7 +52,7 @@ export const messagesJimin: MessageData[] = [
     timestamp: formatTimestamp(new Date("2025-11-24T07:29:00")),
     date: new Date("2025-11-24T07:29:00"),
     isMine: false,
-    senderAvatar: "지",
+    senderAvatar: FRIEND.FIRST.charAt(0),
     senderAvatarColor: "bg-yellow-400",
   },
   {
@@ -55,7 +61,7 @@ export const messagesJimin: MessageData[] = [
     timestamp: formatTimestamp(new Date("2025-11-24T07:30:00")),
     date: new Date("2025-11-24T07:30:00"),
     isMine: false,
-    senderAvatar: "지",
+    senderAvatar: FRIEND.FIRST.charAt(0),
     senderAvatarColor: "bg-yellow-400",
   },
   {
@@ -75,8 +81,8 @@ export const messagesHyunwoo: MessageData[] = [
     timestamp: "오후 8:30",
     date: new Date("2025-11-20T20:30:00"),
     isMine: false,
-    senderName: "현우",
-    senderAvatar: "현",
+    senderName: FRIEND.SECOND,
+    senderAvatar: FRIEND.SECOND.charAt(0),
     senderAvatarColor: "bg-green-400",
   },
   {
@@ -99,7 +105,7 @@ export const messagesHyunwoo: MessageData[] = [
     timestamp: "오후 8:32",
     date: new Date("2025-11-20T20:32:00"),
     isMine: false,
-    senderAvatar: "현",
+    senderAvatar: FRIEND.SECOND.charAt(0),
     senderAvatarColor: "bg-green-400",
   },
   {
@@ -115,7 +121,7 @@ export const messagesHyunwoo: MessageData[] = [
 export const messagesFamily: MessageData[] = [
   {
     id: "1",
-    content: "민준아 오늘 저녁 몇 시에 집에 와?",
+    content: "길동아 오늘 저녁 몇 시에 집에 와?",
     timestamp: "오후 5:00",
     date: new Date("2025-11-22T17:00:00"),
     isMine: false,
@@ -180,8 +186,8 @@ export const messagesFamily: MessageData[] = [
 export const sampleChatRooms: ChatRoomData[] = [
   {
     id: "1",
-    name: "지민",
-    avatar: "지",
+    name: "기헌",
+    avatar: "기",
     avatarColor: "bg-yellow-400",
     lastMessage: "ㅇㅋㅇㅋ 내일 아침 일찍 와!",
     lastMessageTime: "오후 5:31",
