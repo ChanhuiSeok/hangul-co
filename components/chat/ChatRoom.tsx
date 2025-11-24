@@ -30,7 +30,7 @@ function isSameDay(date1: Date | undefined, date2: Date | undefined): boolean {
 
 export default function ChatRoom({ roomId, roomName, messages }: ChatRoomProps) {
   return (
-    <div id={`채팅방${roomId}`} className="relative flex-1 flex flex-col bg-[#B2C7D9]">
+    <div id={`채팅방${roomId}`} className="w-full relative overflow-hidden flex-1 flex flex-col bg-[#B2C7D9]">
       {/* ID 표시 */}
       <div className="absolute top-1 right-1 bg-blue-700 text-white font-bold text-sm px-1.5 py-0.5 rounded z-10">
         ID: <span className="text-yellow-200">채팅방{roomId}</span>

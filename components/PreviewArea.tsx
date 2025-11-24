@@ -106,9 +106,9 @@ export default function PreviewArea({ code, commands = [], eventBindings = [] }:
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex flex-col h-full rounded-lg border border-gray-300">
       {/* 브라우저 스타일 컨테이너 */}
-      <div className="flex-1 flex flex-col max-h-[700px] bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden">
+      <div className="flex flex-col h-full bg-white shadow-lg">
         {/* 브라우저 상단 바 */}
         <div className="bg-gray-100 border-b border-gray-300">
           {/* 탭 영역 */}
@@ -180,19 +180,15 @@ export default function PreviewArea({ code, commands = [], eventBindings = [] }:
         </div>
 
         {/* 브라우저 콘텐츠 영역 */}
-        <div
-          ref={previewRef}
-          className="flex-1 bg-white overflow-hidden max-h-[600px] min-h-[600px]"
-          id="preview-container"
-        >
+        <div ref={previewRef} className="flex bg-white h-[450px]" id="preview-container">
           {/* 카카오톡 스타일 채팅 UI */}
-          <div className="flex h-full">
+          <div className="flex w-full h-full">
             <ChatList chatRooms={updatedChatRooms} messages={chatRoomMessages} onChatRoomClick={handleChatRoomClick} />
             {isChatRoomOpen && selectedChatRoom && (
               <ChatRoom roomId={selectedChatRoomId} roomName={selectedChatRoom.name} messages={selectedMessages} />
             )}
             {!isChatRoomOpen && (
-              <div className="flex-1 flex items-center justify-center">
+              <div className="flex w-full items-center justify-center">
                 <div className="bg-blue-700 text-white font-bold text-sm px-1.5 py-0.5 rounded z-10">
                   ID: <span className="text-yellow-200">채팅방1</span> 또는{" "}
                   <span className="text-yellow-200">채팅방2</span> 또는 <span className="text-yellow-200">채팅방3</span>
