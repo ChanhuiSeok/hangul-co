@@ -18,4 +18,5 @@ export interface MessageData {
   senderName?: string;
   senderAvatar?: string;
   senderAvatarColor?: string;
+  imageUrl?: string; // 그림 메시지 이미지 URL
 }

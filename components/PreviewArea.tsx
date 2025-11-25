@@ -68,6 +68,10 @@ export default function PreviewArea({ code, commands = [], eventBindings = [] }:
     return chatRoomMessages[selectedChatRoomId] || [];
   }, [selectedChatRoomId, chatRoomMessages]);
 
+  console.log("selectedChatRoom", selectedChatRoom);
+  console.log("selectedMessages", selectedMessages);
+  console.log("chatRoomMessages", chatRoomMessages);
+
   // 채팅방 목록에서 선택 상태 업데이트
   const updatedChatRooms = useMemo(() => {
     return sampleChatRooms.map((room) => ({
@@ -170,7 +174,12 @@ export default function PreviewArea({ code, commands = [], eventBindings = [] }:
           <div className="flex w-full h-full">
             <ChatList chatRooms={updatedChatRooms} messages={chatRoomMessages} onChatRoomClick={handleChatRoomClick} />
             {isChatRoomOpen && selectedChatRoom && (
-              <ChatRoom roomId={selectedChatRoomId} roomName={selectedChatRoom.name} messages={selectedMessages} />
+              <ChatRoom
+                roomId={selectedChatRoomId}
+                roomName={selectedChatRoom.name}
+                messages={selectedMessages}
+                setMessages={setChatRoomMessages}
+              />
             )}
             {!isChatRoomOpen && (
               <div className="flex w-full items-center justify-center">

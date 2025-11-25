@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { MessageData } from "./types";
 import Message from "./Message";
 import DrawingCanvas from "./DrawingCanvas";
@@ -9,6 +9,7 @@ interface ChatRoomProps {
   roomId: string;
   roomName: string;
   messages: MessageData[];
+  setMessages: Dispatch<SetStateAction<Record<string, MessageData[]>>>;
 }
 
 // 날짜 포맷 함수
@@ -32,8 +33,29 @@ function isSameDay(date1: Date | undefined, date2: Date | undefined): boolean {
   );
 }
 
-export default function ChatRoom({ roomId, roomName, messages }: ChatRoomProps) {
+export default function ChatRoom({ roomId, roomName, messages, setMessages }: ChatRoomProps) {
   const [isDrawingOpen, setIsDrawingOpen] = useState(false);
+
+  // 그림 메시지 전송 핸들러
+  const handleSendDrawing = (imageUrl: string) => {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString("ko-KR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    const newMessage: MessageData = {
+      id: `msg-${Date.now()}`,
+      content: "그림 메시지",
+      imageUrl: imageUrl,
+      timestamp: timeString,
+      date: now,
+      isMine: true,
+    };
+
+    setMessages((prev) => ({ ...prev, [roomId]: [...(prev[roomId] || []), newMessage] }));
+  };
 
   return (
     <div id={`채팅방${roomId}`} className="w-full relative overflow-hidden flex-1 flex flex-col bg-[#B2C7D9]">
@@ -82,10 +104,7 @@ export default function ChatRoom({ roomId, roomName, messages }: ChatRoomProps) 
       <div className="bg-white border-t border-gray-200 p-2">
         <div className="flex items-center gap-2">
           {/* 채팅방 메뉴 */}
-          <button
-            className="p-2 hover:bg-gray-100 rounded"
-            onClick={() => setIsDrawingOpen(true)}
-          >
+          <button className="p-2 hover:bg-gray-100 rounded" onClick={() => setIsDrawingOpen(true)}>
             <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
@@ -104,9 +123,7 @@ export default function ChatRoom({ roomId, roomName, messages }: ChatRoomProps) 
       </div>
 
       {/* 그림 그리기 모달 */}
-      {isDrawingOpen && (
-        <DrawingCanvas onClose={() => setIsDrawingOpen(false)} />
-      )}
+      {isDrawingOpen && <DrawingCanvas onClose={() => setIsDrawingOpen(false)} onSend={handleSendDrawing} />}
     </div>
   );
 }
