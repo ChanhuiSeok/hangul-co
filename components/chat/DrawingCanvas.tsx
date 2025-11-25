@@ -19,17 +19,6 @@ const COLORS = [
   { name: "분홍", value: "#EC4899" },
 ];
 
-// 배경 색상
-const BG_COLORS = [
-  { name: "투명", value: "transparent" },
-  { name: "흰색", value: "#FFFFFF" },
-  { name: "밝은 회색", value: "#F3F4F6" },
-  { name: "노란색", value: "#FEF9C3" },
-  { name: "분홍색", value: "#FCE7F3" },
-  { name: "파란색", value: "#DBEAFE" },
-  { name: "초록색", value: "#DCFCE7" },
-];
-
 // 이모티콘 템플릿
 interface Template {
   name: string;
@@ -44,6 +33,7 @@ export default function DrawingCanvas({ onClose, onSend }: DrawingCanvasProps) {
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
   const [currentColor, setCurrentColor] = useState("#000000");
   const [lineWidth, setLineWidth] = useState(2);
+  const [isEraser, setIsEraser] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -71,12 +61,17 @@ export default function DrawingCanvas({ onClose, onSend }: DrawingCanvasProps) {
     setContext(ctx);
   }, [bgColor]);
 
-  // 색상 변경
+  // 색상 변경 및 지우개 모드
   useEffect(() => {
     if (!context) return;
-    context.strokeStyle = currentColor;
-    context.fillStyle = currentColor;
-  }, [currentColor, context]);
+    if (isEraser) {
+      context.globalCompositeOperation = "destination-out";
+    } else {
+      context.globalCompositeOperation = "source-over";
+      context.strokeStyle = currentColor;
+      context.fillStyle = currentColor;
+    }
+  }, [currentColor, context, isEraser]);
 
   // 선 굵기 변경
   useEffect(() => {
@@ -154,7 +149,7 @@ export default function DrawingCanvas({ onClose, onSend }: DrawingCanvasProps) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl p-3 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-1">
           <h2 className="text-xl text-black font-semibold">이모티콘 메이커</h2>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,26 +158,57 @@ export default function DrawingCanvas({ onClose, onSend }: DrawingCanvasProps) {
           </button>
         </div>
 
-        {/* 색상 팔레트 */}
+        {/* 도구 선택 */}
         <div className="mb-4">
-          <h3 className="text-sm font-semibold mb-2">펜 색상</h3>
-          <div className="flex gap-2 flex-wrap">
-            {COLORS.map((color) => (
-              <button
-                key={color.value}
-                onClick={() => setCurrentColor(color.value)}
-                className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${
-                  currentColor === color.value ? "border-gray-900 scale-110" : "border-gray-300"
-                }`}
-                style={{ backgroundColor: color.value }}
-                title={color.name}
-              />
-            ))}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setIsEraser(false)}
+              className={`px-4 py-2 rounded-lg border-2 transition-all ${
+                !isEraser
+                  ? "bg-blue-500 text-white border-blue-600"
+                  : "bg-white text-black border-gray-300 hover:bg-gray-50"
+              }`}
+            >
+              ✏️ 펜
+            </button>
+            <button
+              onClick={() => setIsEraser(true)}
+              className={`px-4 py-2 rounded-lg border-2 transition-all ${
+                isEraser
+                  ? "bg-blue-500 text-white border-blue-600"
+                  : "bg-white text-black border-gray-300 hover:bg-gray-50"
+              }`}
+            >
+              🧹 지우개
+            </button>
+            <button onClick={clearCanvas} className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-black">
+              전체 지우기
+            </button>
           </div>
         </div>
+
+        {/* 색상 팔레트 */}
+        {!isEraser && (
+          <div className="mb-4">
+            <h3 className="text-sm text-black font-semibold mb-2">펜 색상</h3>
+            <div className="flex gap-2 flex-wrap">
+              {COLORS.map((color) => (
+                <button
+                  key={color.value}
+                  onClick={() => setCurrentColor(color.value)}
+                  className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${
+                    currentColor === color.value ? "border-gray-900 scale-110" : "border-gray-300"
+                  }`}
+                  style={{ backgroundColor: color.value }}
+                  title={color.name}
+                />
+              ))}
+            </div>
+          </div>
+        )}
         {/* 선 굵기 */}
         <div className="mb-4">
-          <h3 className="text-sm font-semibold mb-2">선 굵기: {lineWidth}px</h3>
+          <h3 className="text-sm text-black font-semibold mb-2">선 굵기: {lineWidth}px</h3>
           <input
             type="range"
             min="1"
@@ -218,14 +244,11 @@ export default function DrawingCanvas({ onClose, onSend }: DrawingCanvasProps) {
 
         {/* 버튼 */}
         <div className="flex gap-2 justify-end">
-          <button onClick={clearCanvas} className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-black">
-            전체 지우기
-          </button>
           <button
             onClick={handleSend}
             className="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 rounded-lg font-semibold text-black"
           >
-            전송 📤
+            채팅방에 전송 📤
           </button>
         </div>
       </div>
