@@ -10,11 +10,11 @@ export default function Message({ message }: MessageProps) {
     return (
       <div className="flex items-end justify-end">
         <span className="text-xs text-gray-600 mr-2">{message.timestamp}</span>
-        <div className="text-black w-[240px] rounded-lg max-w-xs overflow-hidden">
+        <div className="text-black rounded-lg max-w-xs overflow-hidden">
           {message.imageUrl ? (
             <img src={message.imageUrl} alt="그림 메시지" className="w-full h-auto" />
           ) : (
-            <p className="text-sm p-2">{message.content}</p>
+            <p className="text-sm bg-yellow-300 p-2">{message.content}</p>
           )}
         </div>
       </div>
