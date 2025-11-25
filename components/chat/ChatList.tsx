@@ -11,8 +11,8 @@ export default function ChatList({ chatRooms, messages, onChatRoomClick }: ChatL
   return (
     <div className="w-64 min-w-64 border-r border-gray-200 flex flex-col">
       {/* 헤더 */}
-      <div className="p-4 border-b border-gray-200 bg-gray-50">
-        <h2 className="text-lg font-bold">채팅</h2>
+      <div className="p-2 border-b border-gray-200 bg-gray-50">
+        <h2 className="text-md font-bold">채팅</h2>
       </div>
 
       {/* 채팅방 목록 */}

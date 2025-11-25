@@ -29,15 +29,13 @@ export default function Home() {
   return (
     <main className="flex flex-col h-full bg-gray-50 overflow-y-scroll">
       {/* Header */}
-      <header className="bg-indigo-600 text-white py-2 px-4 shadow-lg flex items-center justify-between">
-        <h1 className="text-xl font-bold">상서중학교 - 나만의 채팅 만들기 🧑‍💻</h1>
+      <header className="bg-indigo-700 text-white px-4 py-1 shadow-lg flex items-center justify-between">
+        <h1 className="text-md font-bold">상서중학교 - 나만의 채팅 만들기 🧑‍💻</h1>
         <div className="flex items-center gap-4">
-          <div className="px-4 py-2 bg-yellow-500 text-black rounded-lg font-bold text-lg">
-            점수: {score}점
-          </div>
+          <div className="px-2 py-1 bg-yellow-500 text-black rounded-lg font-bold text-sm">점수: {score}점</div>
           <button
             onClick={() => setIsHistoryOpen(true)}
-            className="px-4 py-2 text-sm bg-blue-900 hover:bg-blue-900 rounded-lg transition font-semibold shadow-md"
+            className="px-2 py-1 text-sm bg-slate-700 border border-slate-400 rounded-lg font-semibold shadow-md"
           >
             📜 실행 내역
           </button>
@@ -47,12 +45,12 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-full">
         {/* Preview Area */}
-        <div className="p-4 h-[600px]">
+        <div className="p-1 h-[480px]">
           <PreviewArea code={code} commands={commands} eventBindings={eventBindings} />
         </div>
 
         {/* Editor Area */}
-        <div className="h-64 border-t-2 border-gray-300 h-[300px]">
+        <div className="h-64 border-t-2 border-gray-300 h-[320px]">
           <EditorArea
             code={code}
             onCodeChange={setCode}

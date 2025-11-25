@@ -36,7 +36,7 @@ export default function ChatRoom({ roomId, roomName, messages }: ChatRoomProps) 
         ID: <span className="text-yellow-200">채팅방{roomId}</span>
       </div>
       {/* 채팅방 헤더 */}
-      <div className="p-4 flex items-center justify-between">
+      <div className="px-4 py-2 flex items-center justify-between">
         <div className="flex items-center">
           <div>
             <h3 className="font-semibold text-gray-900">{roomName}</h3>
@@ -73,7 +73,7 @@ export default function ChatRoom({ roomId, roomName, messages }: ChatRoomProps) 
       </div>
 
       {/* 메시지 입력창 */}
-      <div className="bg-white border-t border-gray-200 p-4">
+      <div className="bg-white border-t border-gray-200 p-2">
         <div className="flex items-center gap-2">
           <button className="p-2 hover:bg-gray-100 rounded">
             <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
