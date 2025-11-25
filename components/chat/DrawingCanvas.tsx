@@ -37,13 +37,13 @@ interface Template {
   draw: (ctx: CanvasRenderingContext2D, color: string) => void;
 }
 
+const bgColor = "transparent";
 export default function DrawingCanvas({ onClose, onSend }: DrawingCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
   const [currentColor, setCurrentColor] = useState("#000000");
   const [lineWidth, setLineWidth] = useState(2);
-  const [bgColor, setBgColor] = useState("#FFFFFF");
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -155,7 +155,7 @@ export default function DrawingCanvas({ onClose, onSend }: DrawingCanvasProps) {
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl p-3 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl text-black font-semibold">그림 그리기</h2>
+          <h2 className="text-xl text-black font-semibold">이모티콘 메이커</h2>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -180,33 +180,6 @@ export default function DrawingCanvas({ onClose, onSend }: DrawingCanvasProps) {
             ))}
           </div>
         </div>
-
-        {/* 배경 색상 */}
-        <div className="mb-4">
-          <h3 className="text-sm font-semibold mb-2">배경 색상</h3>
-          <div className="flex gap-2 flex-wrap">
-            {BG_COLORS.map((color) => (
-              <button
-                key={color.value}
-                onClick={() => setBgColor(color.value)}
-                className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${
-                  bgColor === color.value ? "border-gray-900 scale-110" : "border-gray-300"
-                } ${color.value === "transparent" ? "bg-transparent" : ""}`}
-                style={{
-                  backgroundColor: color.value === "transparent" ? "transparent" : color.value,
-                  backgroundImage:
-                    color.value === "transparent"
-                      ? "linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)"
-                      : undefined,
-                  backgroundSize: color.value === "transparent" ? "8px 8px" : undefined,
-                  backgroundPosition: color.value === "transparent" ? "0 0, 4px 4px" : undefined,
-                }}
-                title={color.name}
-              />
-            ))}
-          </div>
-        </div>
-
         {/* 선 굵기 */}
         <div className="mb-4">
           <h3 className="text-sm font-semibold mb-2">선 굵기: {lineWidth}px</h3>
