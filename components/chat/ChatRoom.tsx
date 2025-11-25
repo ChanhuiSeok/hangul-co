@@ -1,9 +1,10 @@
 "use client";
 
-import { type Dispatch, type SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState, useRef, useEffect } from "react";
 import { MessageData } from "./types";
 import Message from "./Message";
 import DrawingCanvas from "./DrawingCanvas";
+import { FRIEND, FRIEND_AVATAR_COLOR } from "@/constants/chatData";
 
 interface ChatRoomProps {
   roomId: string;
@@ -33,8 +34,43 @@ function isSameDay(date1: Date | undefined, date2: Date | undefined): boolean {
   );
 }
 
+const PRAISE_MESSAGES = {
+  "1": ["갑자기??", "이건 무슨 이모티콘이야", "잘.그.렸.어.요", "숙제 같이 하자..", "너가 직접 그렸다고?"],
+  "2": ["롤이나 하자", "아 야!", "먼데 먼데", "뭐냐고~", "그만 보내라잉~?", "ㅎㅇㅎㅇ", "이모티콘 자랑금지"],
+  "3": [
+    "오 대박 👍",
+    "감동받긴 했다 ㅠㅠ",
+    "재능있다 👏 계속 그려보자~~",
+    "귀.여.워.요.잘.그.려.요.",
+    "다시 한번 그려봐 ㅋㅋㅋㅋ",
+    "계속 이모티콘 보낼거야?",
+    "칭찬한다~ 나 간다~ ✨",
+  ],
+} as const;
+
 export default function ChatRoom({ roomId, roomName, messages, setMessages }: ChatRoomProps) {
   const [isDrawingOpen, setIsDrawingOpen] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // 메시지가 추가될 때마다 스크롤을 맨 아래로
+  useEffect(() => {
+    // 이미지 로드를 기다리기 위해 약간 지연 후 스크롤
+    const timer = setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [messages]);
+
+  // 이미지 로드 완료 시 추가 스크롤
+  useEffect(() => {
+    const handleImageLoad = () => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    window.addEventListener("message-image-loaded", handleImageLoad);
+    return () => window.removeEventListener("message-image-loaded", handleImageLoad);
+  }, []);
 
   // 그림 메시지 전송 핸들러
   const handleSendDrawing = (imageUrl: string) => {
@@ -47,7 +83,7 @@ export default function ChatRoom({ roomId, roomName, messages, setMessages }: Ch
 
     const newMessage: MessageData = {
       id: `msg-${Date.now()}`,
-      content: "그림 메시지",
+      content: "이모티콘",
       imageUrl: imageUrl,
       timestamp: timeString,
       date: now,
@@ -55,6 +91,40 @@ export default function ChatRoom({ roomId, roomName, messages, setMessages }: Ch
     };
 
     setMessages((prev) => ({ ...prev, [roomId]: [...(prev[roomId] || []), newMessage] }));
+
+    // 1-2초 후 상대방의 칭찬 메시지 자동 전송
+    const delay = Math.random() * 1500 + 100; //  랜덤 딜레이
+    setTimeout(() => {
+      const praiseData = PRAISE_MESSAGES[roomId as keyof typeof PRAISE_MESSAGES];
+      const praiseMessage = praiseData[Math.floor(Math.random() * praiseData.length)];
+      const praiseTime = new Date();
+      const praiseTimeString = praiseTime.toLocaleTimeString("ko-KR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+
+      const senderAvatar =
+        roomId === "1" ? FRIEND.FIRST.charAt(0) : roomId === "2" ? FRIEND.SECOND.charAt(0) : FRIEND.THIRD.charAt(0);
+      const senderAvatarColor =
+        roomId === "1"
+          ? FRIEND_AVATAR_COLOR.FIRST
+          : roomId === "2"
+          ? FRIEND_AVATAR_COLOR.SECOND
+          : FRIEND_AVATAR_COLOR.THIRD;
+
+      const praiseMessageData: MessageData = {
+        id: `msg-${Date.now()}`,
+        content: praiseMessage,
+        timestamp: praiseTimeString,
+        date: praiseTime,
+        isMine: false,
+        senderAvatar: senderAvatar,
+        senderAvatarColor: senderAvatarColor,
+      };
+
+      setMessages((prev) => ({ ...prev, [roomId]: [...(prev[roomId] || []), praiseMessageData] }));
+    }, delay);
   };
 
   return (
@@ -98,6 +168,8 @@ export default function ChatRoom({ roomId, roomName, messages, setMessages }: Ch
             </div>
           );
         })}
+        {/* 스크롤 타겟 */}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* 메시지 입력창 */}

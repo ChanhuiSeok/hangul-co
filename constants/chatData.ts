@@ -24,7 +24,13 @@ export const COLOR_MAP = {
 export const FRIEND = {
   FIRST: "기헌",
   SECOND: "현우",
-  THIRD: "우리 가족",
+  THIRD: "형",
+} as const;
+
+export const FRIEND_AVATAR_COLOR = {
+  FIRST: "#EBA805",
+  SECOND: "#5BC774",
+  THIRD: "#A55BC7",
 } as const;
 
 // 지민이와의 대화
@@ -37,7 +43,7 @@ export const messagesJimin: MessageData[] = [
     isMine: false,
     senderName: FRIEND.FIRST,
     senderAvatar: FRIEND.FIRST.charAt(0),
-    senderAvatarColor: "bg-yellow-400",
+    senderAvatarColor: FRIEND_AVATAR_COLOR.FIRST,
   },
   {
     id: "2",
@@ -53,7 +59,7 @@ export const messagesJimin: MessageData[] = [
     date: new Date("2025-11-24T07:29:00"),
     isMine: false,
     senderAvatar: FRIEND.FIRST.charAt(0),
-    senderAvatarColor: "bg-yellow-400",
+    senderAvatarColor: FRIEND_AVATAR_COLOR.FIRST,
   },
   {
     id: "4",
@@ -62,7 +68,7 @@ export const messagesJimin: MessageData[] = [
     date: new Date("2025-11-24T07:30:00"),
     isMine: false,
     senderAvatar: FRIEND.FIRST.charAt(0),
-    senderAvatarColor: "bg-yellow-400",
+    senderAvatarColor: FRIEND_AVATAR_COLOR.FIRST,
   },
   {
     id: "5",
@@ -83,7 +89,7 @@ export const messagesHyunwoo: MessageData[] = [
     isMine: false,
     senderName: FRIEND.SECOND,
     senderAvatar: FRIEND.SECOND.charAt(0),
-    senderAvatarColor: "bg-green-400",
+    senderAvatarColor: FRIEND_AVATAR_COLOR.SECOND,
   },
   {
     id: "2",
@@ -106,7 +112,7 @@ export const messagesHyunwoo: MessageData[] = [
     date: new Date("2025-11-20T20:32:00"),
     isMine: false,
     senderAvatar: FRIEND.SECOND.charAt(0),
-    senderAvatarColor: "bg-green-400",
+    senderAvatarColor: FRIEND_AVATAR_COLOR.SECOND,
   },
   {
     id: "5",
@@ -127,7 +133,7 @@ export const messagesFamily: MessageData[] = [
     isMine: false,
     senderName: "엄마",
     senderAvatar: "엄",
-    senderAvatarColor: "bg-yellow-400",
+    senderAvatarColor: FRIEND_AVATAR_COLOR.FIRST,
   },
   {
     id: "2",
@@ -144,7 +150,7 @@ export const messagesFamily: MessageData[] = [
     isMine: false,
     senderName: "엄마",
     senderAvatar: "엄",
-    senderAvatarColor: "bg-yellow-400",
+    senderAvatarColor: FRIEND_AVATAR_COLOR.FIRST,
   },
   {
     id: "4",
@@ -159,9 +165,9 @@ export const messagesFamily: MessageData[] = [
     timestamp: "오후 5:08",
     date: new Date("2025-11-22T17:08:00"),
     isMine: false,
-    senderName: "누나",
-    senderAvatar: "누",
-    senderAvatarColor: "bg-purple-400",
+    senderName: FRIEND.THIRD,
+    senderAvatar: FRIEND.THIRD.charAt(0),
+    senderAvatarColor: FRIEND_AVATAR_COLOR.THIRD,
   },
   {
     id: "6",
@@ -171,7 +177,7 @@ export const messagesFamily: MessageData[] = [
     isMine: false,
     senderName: "엄마",
     senderAvatar: "엄",
-    senderAvatarColor: "bg-yellow-400",
+    senderAvatarColor: FRIEND_AVATAR_COLOR.FIRST,
   },
   {
     id: "7",
@@ -188,17 +194,17 @@ export const sampleChatRooms: ChatRoomData[] = [
     id: "1",
     name: "기헌",
     avatar: "기",
-    avatarColor: "bg-yellow-400",
+    avatarColor: FRIEND_AVATAR_COLOR.FIRST,
     lastMessage: "ㅇㅋㅇㅋ 내일 아침 일찍 와!",
     lastMessageTime: "오후 5:31",
-    unreadCount: 1,
+    unreadCount: 0,
     isSelected: true,
   },
   {
     id: "2",
     name: "현우",
     avatar: "현",
-    avatarColor: "bg-green-400",
+    avatarColor: FRIEND_AVATAR_COLOR.SECOND,
     lastMessage: "그럼 한 판만 하자!",
     lastMessageTime: "오후 8:33",
     unreadCount: 0,
@@ -208,10 +214,10 @@ export const sampleChatRooms: ChatRoomData[] = [
     id: "3",
     name: "우리 가족 💕",
     avatar: "🏠",
-    avatarColor: "bg-purple-400",
+    avatarColor: FRIEND_AVATAR_COLOR.THIRD,
     lastMessage: "우리 가족 최고 👍",
     lastMessageTime: "오후 5:11",
-    unreadCount: 2,
+    unreadCount: 0,
     isSelected: false,
   },
 ];

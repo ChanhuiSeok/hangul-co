@@ -20,7 +20,8 @@ export default function ChatListItem({ chatRoom, chatMessages, onClick }: ChatLi
         ID: <span className="text-yellow-200">채팅목록{chatRoom.id}</span>
       </div>
       <div
-        className={`w-12 h-12 rounded-full ${chatRoom.avatarColor} flex items-center justify-center text-white font-semibold mr-3`}
+        style={{ backgroundColor: chatRoom.avatarColor }}
+        className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold mr-3`}
       >
         {chatRoom.avatar}
       </div>
